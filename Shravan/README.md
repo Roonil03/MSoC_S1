@@ -1,0 +1,5 @@
+- Shravan S Rao ,CSE
+- Reverse engineering and cryptography 
+- No ideas yet but looking forward to game nights 😁
+- Using ubuntu vm on MacOS (Planning to add kali linux )
+- How to avoid procrastination 

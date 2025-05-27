@@ -1,0 +1,1 @@
+Hey , I am Vedika Singh . My branch is CCE.  Over this break, I’m planning to explore Generative AI and also work on improving my Data Structures and Algorithms skills.Over this break, I’m really interested in exploring Cybersecurity, but I have no idea where to start .I’m currently using Windows, not any Linux distro yet.

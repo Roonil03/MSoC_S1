@@ -1,0 +1,4 @@
+- Rishabh Raj
+- js/unity 
+- anything y'all do (repo/minecraft)
+- windows😭💀(need to learn more coding as spent much time in first year just reading clg shit)

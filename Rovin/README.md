@@ -1,0 +1,1 @@
+Hallo, i’m Rovin Castelino from mnc. Got into rev recently found it really fun during the recent ctf’s. Literally installing ubuntu 22.04 rn on my new laptop (need it for ros2) was on kubuntu before but 22.04 hit eol.
