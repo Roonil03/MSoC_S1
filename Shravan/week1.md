@@ -184,6 +184,51 @@ print(passw)
 ### Challenge 4 : vault-door-4
 This vault uses ASCII encoding for the password. The source code for this vault is here: VaultDoor4.java
 ```
+import java.util.*;
+
+class VaultDoor4 {
+    public static void main(String args[]) {
+        VaultDoor4 vaultDoor = new VaultDoor4();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // I made myself dizzy converting all of these numbers into different bases,
+    // so I just *know* that this vault will be impenetrable. This will make Dr.
+    // Evil like me better than all of the other minions--especially Minion
+    // #5620--I just know it!
+    //
+    //  .:::.   .:::.
+    // :::::::.:::::::
+    // :::::::::::::::
+    // ':::::::::::::'
+    //   ':::::::::'
+    //     ':::::'
+    //       ':'
+    // -Minion #7781
+    public boolean checkPassword(String password) {
+        byte[] passBytes = password.getBytes();
+        byte[] myBytes = {
+            106 , 85  , 53  , 116 , 95  , 52  , 95  , 98  ,
+            0x55, 0x6e, 0x43, 0x68, 0x5f, 0x30, 0x66, 0x5f,
+            0142, 0131, 0164, 063 , 0163, 0137, 0143, 061 ,
+            '9' , '4' , 'f' , '7' , '4' , '5' , '8' , 'e' ,
+        };
+        for (int i=0; i<32; i++) {
+            if (passBytes[i] != myBytes[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 
 ```
 ### Solving and Learning :
@@ -204,13 +249,6 @@ I did the following inorder to get the flag.
 ### Challenge 5 : vault-door-5
 In the last challenge, you mastered octal (base 8), decimal (base 10), and hexadecimal (base 16) numbers, but this vault door uses a different change of base as well as URL encoding! The source code for this vault is here: VaultDoor5.java
 ```
-/******************************************************************************
-
-                            Online Java Compiler.
-                Code, Compile, Run and Debug java program online.
-Write your code in this editor and press "Run" button to execute it.
-
-*******************************************************************************/
 import java.net.URLDecoder;
 import java.util.*;
 
@@ -262,6 +300,125 @@ class Main {
 }
 
 ```
+### Solving and Learning :
+The password we enter is first converted to a byte array where % is added to every charcter and the character is converted to hexadecimal in the urlEncode function
+Then again the string returned from urlencoded is converted to byte array and convert it into base 64 
+
+```
+Password Input
+    │
+    ▼
+Convert to Byte Array
+    │
+    ▼
+URL Encode Each Byte (% added and converted to hex)
+    │
+    ▼
+URL-Encoded String
+    │
+    ▼
+Convert to Byte Array Again
+    │
+    ▼
+Base64 Encode the Byte Array
+    │
+    ▼
+Final Base64-Encoded String
+```
+After this it is comapred with the expected string present in the code .So we have to just decode this inorder to get the password.I coded the follwing to get the password
+
+```
+import base64
+
+se="JTYzJTMwJTZlJTc2JTMzJTcyJTc0JTMxJTZlJTY3JTVm"+ "JTY2JTcyJTMwJTZkJTVmJTYyJTYxJTM1JTY1JTVmJTM2"+ "JTM0JTVmJTM4JTM0JTY2JTY0JTM1JTMwJTM5JTM1"
+bs = base64.b64decode(se)
+bs2 = bs.decode('utf-8')
+
+parts = bs2.split("%")
+pas = ""
+for i in parts:
+    bytes_obj = bytes.fromhex(i)
+    pas = pas+bytes_obj.decode("utf-8")
+print(pas)
+```
+I learned about various conversion modules in python and some library functions of java .
+
+### Flag : picoCTF{c0nv3rt1ng_fr0m_ba5e_64_84fd5095}
+
+### Challenge 6 : Vault-door-6
+This vault uses an XOR encryption scheme. The source code for this vault is here: VaultDoor6.java
+```
+import java.util.*;
+
+class VaultDoor6 {
+    public static void main(String args[]) {
+        VaultDoor6 vaultDoor = new VaultDoor6();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // Dr. Evil gave me a book called Applied Cryptography by Bruce Schneier,
+    // and I learned this really cool encryption system. This will be the
+    // strongest vault door in Dr. Evil's entire evil volcano compound for sure!
+    // Well, I didn't exactly read the *whole* book, but I'm sure there's
+    // nothing important in the last 750 pages.
+    //
+    // -Minion #3091
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        byte[] passBytes = password.getBytes();
+        byte[] myBytes = {
+            0x3b, 0x65, 0x21, 0xa , 0x38, 0x0 , 0x36, 0x1d,
+            0xa , 0x3d, 0x61, 0x27, 0x11, 0x66, 0x27, 0xa ,
+            0x21, 0x1d, 0x61, 0x3b, 0xa , 0x2d, 0x65, 0x27,
+            0xa , 0x66, 0x36, 0x30, 0x67, 0x6c, 0x64, 0x6c,
+        };
+        for (int i=0; i<32; i++) {
+            if (((passBytes[i] ^ 0x55) - myBytes[i]) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+```
+### Solving and Learning :
+Performing XOR on the result using the same key restores the original value.The passbytes array is supposed exor is supposed to be equal to mybytes.But if we exor mybytes we will get passbytes .So i generated the following code to perform this 
+```
+se = "0x3b, 0x65, 0x21, 0xa , 0x38, 0x0 , 0x36, 0x1d, 0xa , 0x3d, 0x61, 0x27, 0x11, 0x66, 0x27, 0xa , 0x21, 0x1d, 0x61, 0x3b, 0xa , 0x2d, 0x65, 0x27, 0xa , 0x66, 0x36, 0x30, 0x67, 0x6c, 0x64, 0x6c"
+
+# Split and strip each item
+ls = [i.strip() for i in se.split(",")]
+
+# Convert each hex string to int
+ls1 = [int(i, 16) for i in ls]
+ls_con = [hex(c ^ 0x55) for c in ls1]
+pas = ""
+for i in ls_con:
+    hex_str = i[2:]  # remove '0x' prefix
+    if len(hex_str) == 1:
+        hex_str = '0' + hex_str  # pad single digit hex
+
+    bytes_obj = bytes.fromhex(hex_str)
+    pas += bytes_obj.decode("utf-8", errors="replace")  # use replace to avoid crash on bad chars
+
+print(pas)
+```
 
 
 
+
+
+
+
+### Flag :picoCTF{n0t_mUcH_h4rD3r_tH4n_x0r_3ce2919}
