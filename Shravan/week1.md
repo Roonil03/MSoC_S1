@@ -1,42 +1,8 @@
 ## Vault Door Series
 
-### Challenge 1 : vault-door-training
-Your mission is to enter Dr. Evil's laboratory and retrieve the blueprints for his Doomsday Project. The laboratory is protected by a series of locked vault doors. Each door is controlled by a computer and requires a password to open. Unfortunately, our undercover agents have not been able to obtain the secret passwords for the vault doors, but one of our junior agents obtained the source code for each vault's computer! You will need to read the source code for each level to figure out what the password is for that vault door. As a warmup, we have created a replica vault in our training facility. The source code for the training vault is here: VaultDoorTraining.java
-```
-import java.util.*;
-
-class VaultDoorTraining {
-    public static void main(String args[]) {
-        VaultDoorTraining vaultDoor = new VaultDoorTraining();
-        Scanner scanner = new Scanner(System.in); 
-        System.out.print("Enter vault password: ");
-        String userInput = scanner.next();
-	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
-	if (vaultDoor.checkPassword(input)) {
-	    System.out.println("Access granted.");
-	} else {
-	    System.out.println("Access denied!");
-	}
-   }
-
-    // The password is below. Is it safe to put the password in the source code?
-    // What if somebody stole our source code? Then they would know what our
-    // password is. Hmm... I will think of some ways to improve the security
-    // on the other doors.
-    //
-    // -Minion #9567
-    public boolean checkPassword(String password) {
-        return password.equals("w4rm1ng_Up_w1tH_jAv4_eec0716b713");
-    }
-}
-```
-### Solution and Learning :
-The program when executed asks the user to enter the password inorder to get access.The program had a comparison block and in this code block the flag is present .So we get the flag easily just by going through the programm.
-
-### Flag : picoCTF{w4rm1ng_Up_w1tH_jAv4_eec0716b713}
 
 
-### Challenge : vault-door-1
+### Challenge 1 : vault-door-1
 This vault uses some complicated arrays! I hope you can make sense of it, special agent. The source code for this vault is here: VaultDoor1.java
   
 ```
@@ -104,7 +70,7 @@ Rearrange the charAt index and filter out the text inside *' '* and added picCTF
 
 ### Flag : picoCTF{d35cr4mbl3_tH3_cH4r4cT3r5_ff63b0}
 
-### Challenge 3 : vault-door-3
+### Challenge 2 : vault-door-3
 This vault uses for-loops and byte arrays. The source code for this vault is here: VaultDoor3.java
 ```
 import java.util.*;
@@ -181,7 +147,7 @@ print(passw)
 
 ### Flag : picoCTF{jU5t_a_s1mpl3_an4gr4m_4_u_1fb380}
 
-### Challenge 4 : vault-door-4
+### Challenge 3 : vault-door-4
 This vault uses ASCII encoding for the password. The source code for this vault is here: VaultDoor4.java
 ```
 import java.util.*;
@@ -246,7 +212,7 @@ I did the following inorder to get the flag.
 
 
 
-### Challenge 5 : vault-door-5
+### Challenge 4 : vault-door-5
 In the last challenge, you mastered octal (base 8), decimal (base 10), and hexadecimal (base 16) numbers, but this vault door uses a different change of base as well as URL encoding! The source code for this vault is here: VaultDoor5.java
 ```
 import java.net.URLDecoder;
@@ -345,7 +311,7 @@ I learned about various conversion modules in python and some library functions 
 
 ### Flag : picoCTF{c0nv3rt1ng_fr0m_ba5e_64_84fd5095}
 
-### Challenge 6 : Vault-door-6
+### Challenge 5 : Vault-door-6
 This vault uses an XOR encryption scheme. The source code for this vault is here: VaultDoor6.java
 ```
 import java.util.*;
@@ -415,10 +381,168 @@ for i in ls_con:
 print(pas)
 ```
 
-
-
-
-
-
-
 ### Flag :picoCTF{n0t_mUcH_h4rD3r_tH4n_x0r_3ce2919}
+
+### Challenge 6 : Vault-door-7
+This vault uses bit shifts to convert a password string into an array of integers. Hurry, agent, we are running out of time to stop Dr. Evil's nefarious plans! The source code for this vault is here: VaultDoor7.java
+```
+import java.util.*;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
+
+class VaultDoor7 {
+    public static void main(String args[]) {
+        VaultDoor7 vaultDoor = new VaultDoor7();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+        }
+    }
+
+    // Each character can be represented as a byte value using its
+    // ASCII encoding. Each byte contains 8 bits, and an int contains
+    // 32 bits, so we can "pack" 4 bytes into a single int. Here's an
+    // example: if the hex string is "01ab", then those can be
+    // represented as the bytes {0x30, 0x31, 0x61, 0x62}. When those
+    // bytes are represented as binary, they are:
+    //
+    // 0x30: 00110000
+    // 0x31: 00110001
+    // 0x61: 01100001
+    // 0x62: 01100010
+    //
+    // If we put those 4 binary numbers end to end, we end up with 32
+    // bits that can be interpreted as an int.
+    //
+    // 00110000001100010110000101100010 -> 808542562
+    //
+    // Since 4 chars can be represented as 1 int, the 32 character password can
+    // be represented as an array of 8 ints.
+    //
+    // - Minion #7816
+    public int[] passwordToIntArray(String hex) {
+        int[] x = new int[8];
+        byte[] hexBytes = hex.getBytes();
+        for (int i=0; i<8; i++) {
+            x[i] = hexBytes[i*4]   << 24
+                 | hexBytes[i*4+1] << 16
+                 | hexBytes[i*4+2] << 8
+                 | hexBytes[i*4+3];
+        }
+        return x;
+    }
+
+    public boolean checkPassword(String password) {
+        if (password.length() != 32) {
+            return false;
+        }
+        int[] x = passwordToIntArray(password);
+        return x[0] == 1096770097
+            && x[1] == 1952395366
+            && x[2] == 1600270708
+            && x[3] == 1601398833
+            && x[4] == 1716808014
+            && x[5] == 1734304867
+            && x[6] == 942695730
+            && x[7] == 942748212;
+    }
+}
+
+```
+### Solving and Learning :
+The password check array was intially present in integer format ,i had a hunch it would be in hexadecimal so converted it to hexadecimal then i converted it to ascii.after converting from int to hexadecimal the new string has length 8,which on breaking down two 4 ascii .So 4*8 = 32 so this was myy thinking process.I also generated a program to get the password.
+```
+x = [
+    1096770097,
+    1952395366,
+    1600270708,
+    1601398833,
+    1716808014,
+    1734304867,
+    942695730,
+    942748212
+]
+
+result = ""
+
+for num in x:
+    # Convert to 8-character hex string, zero-padded
+    hex_str = f"{num:08x}"
+    ascii_str = bytes.fromhex(hex_str).decode('utf-8')  # or 'utf-8' with error handling
+    result+=ascii_str
+
+print(result)
+```
+### Flag : picoCTF{A_b1t_0f_b1t_sh1fTiNg_dc80e28124}
+
+### Challenge 7 : Vault-door 8
+Apparently Dr. Evil's minions knew that our agency was making copies of their source code, because they intentionally sabotaged this source code in order to make it harder for our agents to analyze and crack into! The result is a quite mess, but I trust that my best special agent will find a way to solve it. The source code for this vault is here: VaultDoor8.java
+```
+
+```
+
+### Solving and Learning 
+
+
+### Flag :
+
+### Challenge 8 : File-Types
+This file was found among some files marked confidential but my pdf reader cannot read it, maybe yours can.
+
+### Challenge 9 : Pixalated
+
+### Challenge 10 : Mini-RSA
+
+## Tutorial Ones
+
+### Challenge 1 : vault-door-training
+Your mission is to enter Dr. Evil's laboratory and retrieve the blueprints for his Doomsday Project. The laboratory is protected by a series of locked vault doors. Each door is controlled by a computer and requires a password to open. Unfortunately, our undercover agents have not been able to obtain the secret passwords for the vault doors, but one of our junior agents obtained the source code for each vault's computer! You will need to read the source code for each level to figure out what the password is for that vault door. As a warmup, we have created a replica vault in our training facility. The source code for the training vault is here: VaultDoorTraining.java
+```
+import java.util.*;
+
+class VaultDoorTraining {
+    public static void main(String args[]) {
+        VaultDoorTraining vaultDoor = new VaultDoorTraining();
+        Scanner scanner = new Scanner(System.in); 
+        System.out.print("Enter vault password: ");
+        String userInput = scanner.next();
+	String input = userInput.substring("picoCTF{".length(),userInput.length()-1);
+	if (vaultDoor.checkPassword(input)) {
+	    System.out.println("Access granted.");
+	} else {
+	    System.out.println("Access denied!");
+	}
+   }
+
+    // The password is below. Is it safe to put the password in the source code?
+    // What if somebody stole our source code? Then they would know what our
+    // password is. Hmm... I will think of some ways to improve the security
+    // on the other doors.
+    //
+    // -Minion #9567
+    public boolean checkPassword(String password) {
+        return password.equals("w4rm1ng_Up_w1tH_jAv4_eec0716b713");
+    }
+}
+```
+### Solution and Learning :
+The program when executed asks the user to enter the password inorder to get access.The program had a comparison block and in this code block the flag is present .So we get the flag easily just by going through the programm.
+
+### Flag : picoCTF{w4rm1ng_Up_w1tH_jAv4_eec0716b713}
+
+### Challenge 2 : MOD 26
+Cryptography can be easy, do you know what ROT13 is? cvpbPGS{arkg_gvzr_V'yy_gel_2_ebhaqf_bs_ebg13_MAZyqFQj}Cryptography can be easy, do you know what ROT13 is? cvpbPGS{arkg_gvzr_V'yy_gel_2_ebhaqf_bs_ebg13_MAZyqFQj}
+
+### Solution and Learning :
+ROT13 substitutes each letter with the one 13 positions after it in the alphabet.So used online rot13 decoder to get the flag.
+
+### Flag : picoCTF{next_time_I'll_try_2_rounds_of_rot13_ZNMldSDw}
+
+### Challenge 3 : Information
+Files can always be changed in a secret way. Can you find the flag? cat.jpg
