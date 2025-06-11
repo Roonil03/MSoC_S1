@@ -7,7 +7,7 @@ Sometimes you need to handle process data outside of a file. Can you find a way 
 ### Solution
 Looked up how to store data to a file [here](https://www.geeksforgeeks.org/how-to-send-a-file-using-netcat-and-then-keep-the-connection-alive/) then i did code . and ctrl f picoCTF (could have done grep also)
 
-![[Pasted image 20250529044548.png]]
+![image](Pasted1.png)
 
 ### Terminal
 ```shell
@@ -61,7 +61,7 @@ This vault uses some complicated arrays! I hope you can make sense of it, specia
 ### Solution
 tried a lot to find a way to automate the solution but couldnt so i just did it manually 
 
-![[Pasted image 20250529054521.png]]
+![image](Pasted2.png)
 
 ### Flag
 >picoCTF{d35cr4mbl3_tH3_cH4r4cT3r5_75092e}
